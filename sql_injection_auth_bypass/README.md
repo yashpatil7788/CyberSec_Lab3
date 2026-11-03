@@ -38,3 +38,8 @@ Normal account:
 
 First verify that a wrong password fails. Then use the SQL injection test payload described in `docs/solution-guide.md` on the vulnerable form and repeat the same test on the secured form.
 
+## Important
+
+This intentionally vulnerable endpoint is for a local, isolated classroom demonstration only. Do not deploy it to a public server or use it against systems you do not own or have explicit permission to test.
+
+The demo uses a plaintext dummy password to keep the SQL injection concept visible and simple. It is not a production authentication design. Real applications should store password hashes (for example, Argon2id or bcrypt), use parameterized queries, apply least privilege, and return generic authentication errors.
