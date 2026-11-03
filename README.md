@@ -31,6 +31,3 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 
 Each project README contains its setup instructions, vulnerable code path, exact exploit, root cause, implemented mitigation, and mitigation theory.
 
-## Video demonstration
-
-Link:v
