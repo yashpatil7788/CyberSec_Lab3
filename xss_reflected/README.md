@@ -22,42 +22,10 @@ Then open **http://127.0.0.1:5000/** in your browser.
 | **(d) Mitigation implemented** | `/search/safe` — applies `html.escape()` (context-aware output encoding) before embedding input in HTML ([app.py, line ~225](app.py)) |
 | **(e) Other mitigations (theory)** | See section below |
 
----
-
-## Video Demo Script (2-3 minutes)
-
-### Step 1: Show the Vulnerable Page (~45 sec)
-1. Open `http://127.0.0.1:5000/` → click **"Vulnerable Version"**
-2. Search for `Mouse` → show it works normally
-3. Now paste the XSS payload in the search box:
-   ```
-   <script>alert('XSS')</script>
-   ```
-4. Press Search → **an alert box pops up** — script execution confirmed!
-5. Show the URL bar — the payload is in the `?q=` parameter. Explain: _"An attacker would send this crafted URL to a victim via email or chat. When the victim clicks it, the script runs in their browser session."_
-
-### Step 2: Show the Root Cause (~30 sec)
-- Scroll down to the **"Vulnerable Code Path"** box on the page, or open `app.py` and point to:
-  ```python
-  query_display = query  # ← THIS IS THE VULNERABILITY
-  ```
-- Explain: _"The user input goes directly into the HTML. The browser sees `<script>` and executes it."_
-
-### Step 3: Show the Mitigated Page (~45 sec)
-1. Go back to Home → click **"Mitigated Version"**
-2. Click the **same payload** link → the `<script>` tag appears as **plain text** on the page. No alert. No execution.
-3. Show the **"Mitigated Code Path"** box:
-   ```python
-   query_display = html.escape(query)  # ← THIS IS THE FIX
-   ```
-- Explain: _"`html.escape()` converts `<` to `&lt;` and `>` to `&gt;`. The browser renders these as visible characters, not as HTML tags."_
-
-### Step 4: Discuss Other Mitigations (~45 sec)
-Read the section below on camera.
 
 ---
 
-## (e) Other Mitigations — Theory
+## Other Mitigations — Theory
 
 The mitigation I implemented is **context-aware output encoding** (`html.escape()`). Here are the other defences from the lecture slides and why they work:
 
@@ -75,7 +43,7 @@ The mitigation I implemented is **context-aware output encoding** (`html.escape(
 
 | Member Name | Roll Number | Category | Variant Implemented |
 |---|---|---|---|
-| *(your name)* | *(your roll)* | Cross-Site Scripting (XSS) | Reflected XSS |
+| Arya Narkhede | IIT2024181 | Cross-Site Scripting (XSS) | Reflected XSS |
 
 ---
 
