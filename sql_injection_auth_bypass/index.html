@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Authentication Lab</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <header>
+            <p class="eyebrow">WEB SECURITY LAB</p>
+            <h1>SQL Injection Authentication</h1>
+            <p class="subtitle">Compare a vulnerable login with a secured implementation.</p>
+        </header>
+
+        <section class="notice">
+            <strong>Local educational demo only.</strong>
+            Use only the dummy account and this application running on your own machine.
+        </section>
+
+        <section class="grid">
+            <article class="panel vulnerable">
+                <div class="panel-heading">
+                    <span class="tag danger">Vulnerable</span>
+                    <h2>Vulnerable Login</h2>
+                </div>
+                <p class="description">This endpoint directly inserts user input into an SQL query.</p>
+                <form id="vulnerable-form" data-endpoint="/api/vulnerable-login">
+                    <label for="v-username">Username</label>
+                    <input id="v-username" name="username" autocomplete="off" required>
+                    <label for="v-password">Password</label>
+                    <input id="v-password" name="password" type="password" required>
+                    <button type="submit">Test vulnerable login</button>
+                </form>
+                <div id="vulnerable-result" class="result" aria-live="polite">Result will appear here.</div>
+            </article>
+
+            <article class="panel secure">
+                <div class="panel-heading">
+                    <span class="tag success">Secured</span>
+                    <h2>Secured Login</h2>
+                </div>
+                <p class="description">This endpoint uses a parameterized SQL query.</p>
+                <form id="secure-form" data-endpoint="/api/secure-login">
+                    <label for="s-username">Username</label>
+                    <input id="s-username" name="username" autocomplete="off" required>
+                    <label for="s-password">Password</label>
+                    <input id="s-password" name="password" type="password" required>
+                    <button type="submit">Test secured login</button>
+                </form>
+                <div id="secure-result" class="result" aria-live="polite">Result will appear here.</div>
+            </article>
+        </section>
+
+        <section class="credentials">
+            <h2>Dummy account for normal testing</h2>
+            <p>Username: <code>admin</code> &nbsp; Password: <code>admin123</code></p>
+            <p>Try a normal login first, then compare both forms using the same test input.</p>
+        </section>
+
+        <footer>SQL Injection – Authentication Bypass | Local demonstration</footer>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>
