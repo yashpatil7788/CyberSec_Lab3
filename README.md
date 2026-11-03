@@ -31,7 +31,7 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 | Project | Documentation | Stack | Local URL |
 | --- | --- | --- | --- |
 | XSS: Stored | [xss-stored/README.md](xss-stored/README.md) |  |  |
-| OS command injection | [OS_COMMAND_INBAND/README.md](OS_COMMAND_INBAND/README.md) | : Python 3, Flask, HTML5, CSS3, JavaScript, and Jinja2. |  |
+| OS command injection | [OS_COMMAND_INBAND/README.md](OS_COMMAND_INBAND/README.md) | Python 3, Flask, HTML5, CSS3, JavaScript, and Jinja2. |  |
 | CSRF: GET-based forged action | [CSRF_GET/README.md](CSRF_GET/README.md) | Python, Flask (bank app) and a static attacker page | Bank: http://localhost:5000, attacker: http://localhost:8000 |
 | SQL injection: authentication bypass | [sql_injection_auth_bypass](sql_injection_auth_bypass) |  |  |
 | XSS: Reflected | [xss_reflected](xss_reflected) | Python 3 with Flask (single-file app, no database). | Home: http://127.0.0.1:5000/ Vulnerable search: http://127.0.0.1:5000/search/vulnerable Mitigated search: http://127.0.0.1:5000/search/safe |
