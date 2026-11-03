@@ -34,6 +34,6 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 | OS command injection | (folder link to be added) |  |  |
 | CSRF: GET-based forged action | [CSRF_GET/README.md](CSRF_GET/README.md) | Python, Flask (bank app) and a static attacker page | Bank: http://localhost:5000, attacker: http://localhost:8000 |
 | SQL injection: authentication bypass | [sql_injection_auth_bypass](sql_injection_auth_bypass) |  |  |
-| XSS: Reflected | [xss_reflected](xss_reflected) |  |  |
+| XSS: Reflected | [xss_reflected](xss_reflected) | Python 3 with Flask (single-file app, no database). | Home: http://127.0.0.1:5000/ Vulnerable search: http://127.0.0.1:5000/search/vulnerable Mitigated search: http://127.0.0.1:5000/search/safe |
 
 Each project README contains its setup instructions, vulnerable code path, exact exploit, root cause, implemented mitigation, and mitigation theory.
