@@ -16,7 +16,7 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 | Member | Roll number | Category | Assigned variant |
 | --- | --- | --- | --- |
 | Rahul Raut | IIT2024168 | CSRF | Variant 1: GET-based forged action |
-|  |  |  |  |
+| Arya Narkhede | IIT2024181 | XSS | Reflected XSS |
 |  |  |  |  |
 |  |  |  |  |
 
