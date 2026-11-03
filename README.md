@@ -30,7 +30,7 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 
 | Project | Documentation | Stack | Local URL |
 | --- | --- | --- | --- |
-| XSS: Stored | (folder link to be added) |  |  |
+| XSS: Stored | [xss-stored/README.md](xss-stored/README.md) |  |  |
 | OS command injection | (folder link to be added) |  |  |
 | CSRF: GET-based forged action | [CSRF_GET/README.md](CSRF_GET/README.md) | Python, Flask (bank app) and a static attacker page | Bank: http://localhost:5000, attacker: http://localhost:8000 |
 | SQL injection: authentication bypass | [sql_injection_auth_bypass](sql_injection_auth_bypass) |  |  |
