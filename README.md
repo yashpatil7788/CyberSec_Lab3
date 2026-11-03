@@ -28,7 +28,7 @@ Link: https://drive.google.com/drive/folders/1BUni8M-_2mmytMcF7wzSncqZU7KZjfsP
 
 ## Available projects
 
-| Project | Documentation | Stack | Local URL |
+| Project | Documentation | Tech-Stack | Local URL |
 | --- | --- | --- | --- |
 | XSS: Stored | [xss-stored/README.md](xss-stored/README.md) |  |  |
 | OS command injection | [OS_COMMAND_INBAND/README.md](OS_COMMAND_INBAND/README.md) | Python 3, Flask, HTML5, CSS3, JavaScript, and Jinja2. |  |
