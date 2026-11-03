@@ -13,6 +13,7 @@ Group assignment demonstrating SQL injection, OS command injection, cross-site s
 ## Team and ownership (Table 3)
 
 | Member | Roll number | Category | Assigned variant |
+| --- | --- | --- | --- |
 | Rahul Raut | IIT2024168 | CSRF | GET-based forged action |
 | Arya Narkhede | IIT2024181 | XSS | Reflected XSS |
 |  |  |  |  |
