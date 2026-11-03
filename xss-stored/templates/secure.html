@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EchoBoard – Secure</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --grn:    #38a169;
+      --grn-dk: #276749;
+      --grn-lt: #f0fff4;
+      --grn-bd: #c6f6d5;
+      --gray:   #718096;
+      --bg:     #f7fafc;
+      --card:   #ffffff;
+      --border: #e2e8f0;
+      --text:   #2d3748;
+      --sub:    #4a5568;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .secure-banner {
+      background: var(--grn);
+      color: #fff;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .secure-banner .badge {
+      background: rgba(0,0,0,.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .logo { font-size: 20px; font-weight: 700; color: var(--grn); display: flex; align-items: center; gap: 8px; }
+    .logo span { font-weight: 400; color: var(--gray); font-size: 13px; }
+    .nav-link {
+      font-size: 13px; font-weight: 500;
+      color: var(--gray); text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 6px;
+      transition: all .15s;
+    }
+    .nav-link:hover { border-color: #e53e3e; color: #e53e3e; }
+
+    .page { max-width: 780px; margin: 32px auto; padding: 0 20px; }
+
+    .info-box {
+      background: var(--grn-lt);
+      border: 1px solid var(--grn-bd);
+      border-left: 4px solid var(--grn);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 13.5px;
+      line-height: 1.7;
+    }
+    .info-box strong { color: var(--grn); }
+    .info-box code {
+      background: rgba(56,161,105,.12);
+      color: var(--grn-dk);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* encoding table */
+    .enc-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 12px; }
+    .enc-table th { background: var(--grn); color: #fff; padding: 6px 10px; text-align: left; }
+    .enc-table td { padding: 5px 10px; border-bottom: 1px solid var(--grn-bd); }
+    .enc-table tr:last-child td { border-bottom: none; }
+
+    .section-head {
+      font-size: 11px; font-weight: 700; letter-spacing: 1.2px;
+      text-transform: uppercase; color: var(--gray); margin-bottom: 12px;
+    }
+
+    .comments-wrap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+    .comment-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      animation: slideIn .25s ease;
+    }
+    @keyframes slideIn { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:none } }
+
+    .comment-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg,#38a169,#276749);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .comment-author { font-weight: 600; font-size: 14px; }
+    .comment-time { font-size: 12px; color: var(--gray); margin-left: auto; }
+    .comment-body {
+      font-size: 14px; color: var(--sub); line-height: 1.6;
+      padding-left: 44px;
+      white-space: pre-wrap;   /* preserves formatting, never executes */
+      word-break: break-word;
+    }
+    /* encoded badge shown per comment */
+    .encoded-badge {
+      display: inline-block;
+      background: var(--grn-lt); color: var(--grn-dk);
+      border: 1px solid var(--grn-bd);
+      border-radius: 20px; font-size: 11px; font-weight: 600;
+      padding: 2px 10px; margin-left: 44px; margin-top: 8px;
+    }
+
+    .no-comments {
+      text-align: center; color: var(--gray); font-size: 14px;
+      padding: 40px; background: var(--card);
+      border: 1px dashed var(--border); border-radius: 10px;
+    }
+
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px; margin-bottom: 24px;
+    }
+    .form-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media(max-width:540px) { .form-row { grid-template-columns: 1fr; } }
+
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 5px; letter-spacing: .4px; }
+    input, textarea {
+      width: 100%; padding: 10px 14px;
+      border: 1px solid var(--border); border-radius: 7px;
+      font-size: 14px; font-family: inherit; color: var(--text);
+      background: #fdfdfd; resize: vertical;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--grn);
+      box-shadow: 0 0 0 3px rgba(56,161,105,.12);
+    }
+    textarea { min-height: 90px; }
+
+    .submit-row { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
+    .submit-hint { font-size: 12px; color: var(--grn); }
+
+    .btn { padding: 10px 22px; font-size: 14px; font-weight: 600; border: none; border-radius: 7px; cursor: pointer; transition: all .15s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-grn { background: var(--grn); color: #fff; }
+    .btn-grn:hover { background: var(--grn-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(56,161,105,.35); }
+    .btn-ghost { background: transparent; color: var(--gray); border: 1px solid var(--border); font-size: 12px; padding: 6px 12px; }
+    .btn-ghost:hover { border-color: var(--grn); color: var(--grn); }
+
+    .foot { font-size: 12px; color: var(--gray); text-align: center; padding: 20px 0 40px; }
+    .foot a { color: #e53e3e; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="secure-banner">
+  <span class="badge">✅ Secure</span>
+  Output encoding is active — all user input is HTML-escaped before rendering
+</div>
+
+<nav>
+  <div class="logo">💬 EchoBoard <span>/ Secure version</span></div>
+  <a class="nav-link" href="http://127.0.0.1:5000">View Vulnerable Version →</a>
+</nav>
+
+<div class="page">
+
+  <div class="info-box">
+    <strong>🟢 Fix applied: Context-aware output encoding</strong><br>
+    Every comment is passed through <code>markupsafe.escape()</code> before it touches the HTML.
+    Dangerous characters are converted to harmless HTML entities:
+    <table class="enc-table" style="margin-top:12px">
+      <tr><th>Character</th><th>What attacker types</th><th>What browser sees</th><th>Result</th></tr>
+      <tr><td><code>&lt;</code></td><td>&lt;script&gt;</td><td>&amp;lt;script&amp;gt;</td><td>Shown as text ✅</td></tr>
+      <tr><td><code>"</code></td><td>onerror="..."</td><td>&amp;#34;...&amp;#34;</td><td>Shown as text ✅</td></tr>
+      <tr><td><code>&amp;</code></td><td>&amp;foo</td><td>&amp;amp;foo</td><td>Shown as text ✅</td></tr>
+    </table>
+  </div>
+
+  <p class="section-head">{{ comments|length }} Comment{% if comments|length != 1 %}s{% endif %}</p>
+
+  <div class="comments-wrap">
+    {% if comments %}
+      {% for c in comments %}
+      <div class="comment-card">
+        <div class="comment-meta">
+          <div class="avatar">{{ c.author[0]|upper }}</div>
+          <div class="comment-author">{{ c.author }}</div>
+          <div class="comment-time">just now</div>
+        </div>
+        <div class="comment-body">{{ c.body }}</div>
+        <span class="encoded-badge">🔒 HTML-encoded — safe to display</span>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-comments">No comments yet — try submitting an XSS payload and watch it fail!</div>
+    {% endif %}
+  </div>
+
+  <div class="form-card">
+    <h2>✏️ Leave a Comment</h2>
+    <form method="POST" action="/post">
+      <div class="form-row">
+        <div>
+          <label>YOUR NAME</label>
+          <input name="author" placeholder="e.g. Alice" required autocomplete="off"/>
+        </div>
+        <div>
+          <label>TITLE (optional)</label>
+          <input name="title" placeholder="e.g. Student"/>
+        </div>
+      </div>
+      <label>COMMENT</label>
+      <textarea name="body" placeholder="Try &#x3C;script&#x3E;alert('XSS!')&#x3C;/script&#x3E; — it will be shown as plain text" required></textarea>
+      <div class="submit-row">
+        <span class="submit-hint">✅ Output is HTML-escaped — scripts cannot execute</span>
+        <div style="display:flex;gap:8px">
+          <a href="/clear" class="btn btn-ghost">🗑 Clear All</a>
+          <button class="btn btn-grn" type="submit">Post Comment →</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<div class="foot">
+  EchoBoard · <strong>Secure Demo</strong> · Web Server Security Assignment ·
+  <a href="http://127.0.0.1:5000">Switch to Vulnerable →</a>
+</div>
+
+</body>
+</html>

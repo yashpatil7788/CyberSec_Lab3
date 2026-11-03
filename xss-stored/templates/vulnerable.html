@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>EchoBoard – Vulnerable</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #e53e3e;
+      --red-dk: #c53030;
+      --red-lt: #fff5f5;
+      --red-bd: #fed7d7;
+      --gray:   #718096;
+      --bg:     #f7fafc;
+      --card:   #ffffff;
+      --border: #e2e8f0;
+      --text:   #2d3748;
+      --sub:    #4a5568;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Top warning banner ── */
+    .vuln-banner {
+      background: var(--red);
+      color: #fff;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .vuln-banner .badge {
+      background: rgba(0,0,0,.25);
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* ── Nav bar ── */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+    .logo { font-size: 20px; font-weight: 700; color: var(--red); display: flex; align-items: center; gap: 8px; }
+    .logo span { font-weight: 400; color: var(--gray); font-size: 13px; }
+    .nav-link {
+      font-size: 13px; font-weight: 500;
+      color: var(--gray); text-decoration: none;
+      border: 1px solid var(--border);
+      padding: 6px 14px; border-radius: 6px;
+      transition: all .15s;
+    }
+    .nav-link:hover { border-color: #38a169; color: #38a169; }
+
+    /* ── Layout ── */
+    .page { max-width: 780px; margin: 32px auto; padding: 0 20px; }
+
+    /* ── Info box ── */
+    .info-box {
+      background: var(--red-lt);
+      border: 1px solid var(--red-bd);
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+      font-size: 13.5px;
+      line-height: 1.7;
+    }
+    .info-box strong { color: var(--red); }
+    .info-box code {
+      background: rgba(229,62,62,.12);
+      color: var(--red-dk);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    /* ── Section headings ── */
+    .section-head {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--gray);
+      margin-bottom: 12px;
+    }
+
+    /* ── Comment cards ── */
+    .comments-wrap { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+    .comment-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      animation: slideIn .25s ease;
+    }
+    @keyframes slideIn { from { opacity:0; transform:translateY(-6px) } to { opacity:1; transform:none } }
+
+    .comment-meta {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .avatar {
+      width: 34px; height: 34px; border-radius: 50%;
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0;
+    }
+    .comment-author { font-weight: 600; font-size: 14px; }
+    .comment-time { font-size: 12px; color: var(--gray); margin-left: auto; }
+    .comment-body { font-size: 14px; color: var(--sub); line-height: 1.6; padding-left: 44px; }
+
+    .no-comments {
+      text-align: center; color: var(--gray); font-size: 14px;
+      padding: 40px; background: var(--card);
+      border: 1px dashed var(--border); border-radius: 10px;
+    }
+
+    /* ── Form ── */
+    .form-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .form-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 18px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    @media(max-width:540px) { .form-row { grid-template-columns: 1fr; } }
+
+    label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 5px; letter-spacing: .4px; }
+    input, textarea {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: #fdfdfd;
+      transition: border-color .15s, box-shadow .15s;
+      resize: vertical;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(229,62,62,.12);
+    }
+    textarea { min-height: 90px; }
+
+    .submit-row { display: flex; align-items: center; justify-content: space-between; margin-top: 16px; flex-wrap: wrap; gap: 10px; }
+    .submit-hint { font-size: 12px; color: var(--red); }
+
+    .btn {
+      padding: 10px 22px;
+      font-size: 14px; font-weight: 600;
+      border: none; border-radius: 7px;
+      cursor: pointer; transition: all .15s;
+      display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-red { background: var(--red); color: #fff; }
+    .btn-red:hover { background: var(--red-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(229,62,62,.35); }
+
+    .btn-ghost {
+      background: transparent; color: var(--gray);
+      border: 1px solid var(--border); font-size: 12px; padding: 6px 12px;
+    }
+    .btn-ghost:hover { border-color: var(--red); color: var(--red); }
+
+    /* ── Footer ── */
+    .foot { font-size: 12px; color: var(--gray); text-align: center; padding: 20px 0 40px; }
+    .foot a { color: var(--red); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<div class="vuln-banner">
+  <span class="badge">⚠ Vulnerable</span>
+  This app has a Stored XSS flaw — user input is rendered as raw HTML (for demo purposes)
+</div>
+
+<nav>
+  <div class="logo">💬 EchoBoard <span>/ Vulnerable version</span></div>
+  <a class="nav-link" href="http://127.0.0.1:5001">View Secure Version →</a>
+</nav>
+
+<div class="page">
+
+  <div class="info-box">
+    <strong>🔴 Flaw:</strong> Comments are stored in the database exactly as typed and displayed back
+    using <code>Markup()</code> — which tells Flask <em>"don't escape this, trust it."</em>
+    Any <code>&lt;script&gt;</code> tag or event handler submitted here will
+    <strong>execute in every visitor's browser.</strong>
+  </div>
+
+  <p class="section-head">{{ comments|length }} Comment{% if comments|length != 1 %}s{% endif %}</p>
+
+  <div class="comments-wrap">
+    {% if comments %}
+      {% for c in comments %}
+      <div class="comment-card">
+        <div class="comment-meta">
+          <div class="avatar">{{ c.author[0]|upper }}</div>
+          <div class="comment-author">{{ c.author|safe }}</div>
+          <div class="comment-time">just now</div>
+        </div>
+        <div class="comment-body">{{ c.body|safe }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="no-comments">No comments yet — be the first to post!</div>
+    {% endif %}
+  </div>
+
+  <div class="form-card">
+    <h2>✏️ Leave a Comment</h2>
+    <form method="POST" action="/post">
+      <div class="form-row">
+        <div>
+          <label>YOUR NAME</label>
+          <input name="author" placeholder="e.g. Alice" required autocomplete="off"/>
+        </div>
+        <div>
+          <label>TITLE (optional)</label>
+          <input name="title" placeholder="e.g. Student"/>
+        </div>
+      </div>
+      <label>COMMENT</label>
+      <textarea name="body" placeholder="Type your comment… or try a payload like &#x3C;script&#x3E;alert('XSS!')&#x3C;/script&#x3E;" required></textarea>
+      <div class="submit-row">
+        <span class="submit-hint">⚠ No sanitisation — input stored and rendered as-is</span>
+        <div style="display:flex;gap:8px">
+          <a href="/clear" class="btn btn-ghost">🗑 Clear All</a>
+          <button class="btn btn-red" type="submit">Post Comment →</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<div class="foot">
+  EchoBoard · <strong>Vulnerable Demo</strong> · Web Server Security Assignment ·
+  <a href="http://127.0.0.1:5001">Switch to Secure →</a>
+</div>
+
+</body>
+</html>
