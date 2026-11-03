@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>NetProbe Lab | In-band OS Command Injection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <div class="container">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NetProbe Lab home">
+        <span class="brand-mark">›_</span>
+        <span>NetProbe<span class="accent">Lab</span></span>
+      </a>
+      <div class="header-right">
+        <span class="local-chip"><span class="status-dot"></span> LOCALHOST ONLY</span>
+        <span class="variant-chip">VARIANT 01 · IN-BAND</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow"><span class="eyebrow-line"></span> WEB SERVER SECURITY LAB / IT-30001</p>
+        <h1>OS Command <span>Injection.</span></h1>
+        <p class="lead">A deliberately vulnerable network diagnostic tool. Observe how untrusted input can change a server-side OS command—and how the command output appears in the HTTP response.</p>
+        <div class="warning" role="note"><span class="warning-icon">!</span><div><strong>Intentionally insecure by design.</strong> Use exclusively on your own lab computer. Do not deploy, expose this port to a network, or test outside your group's application.</div></div>
+      </section>
+
+      <section class="workbench" aria-label="Command injection workbench">
+        <div class="workspace-header">
+          <div class="workspace-title"><span class="terminal-icon">&gt;_</span><div><h2>Network Diagnostic Console</h2><p>Lab environment: {{ os_label }}</p></div></div>
+          <span class="mode-tag"><span class="small-dot"></span> VULNERABLE MODE</span>
+        </div>
+        <div class="workspace-body">
+          <div class="section-label"><span class="section-number">01</span> INPUT</div>
+          <form id="diagnose-form" action="{{ url_for('diagnose') }}" method="post">
+            <label for="target">Target IP address or hostname</label>
+            <div class="input-row"><span class="input-prefix">$</span><input id="target" name="target" value="{{ target }}" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" required maxlength="200" aria-describedby="input-help"><button type="submit" class="run-btn">Run diagnostic <span aria-hidden="true">↗</span></button></div>
+            <p id="input-help" class="hint">The server will execute the assembled ping command and return its raw output.</p>
+          </form>
+
+          <div class="examples">
+            <span class="examples-label">TRY AN EXAMPLE</span>
+            <button class="example-btn" type="button" data-target="{{ normal_target }}"><span class="example-indicator normal"></span> Normal request <code>{{ normal_target }}</code></button>
+            <button class="example-btn attack" type="button" data-target="{{ attack_target }}"><span class="example-indicator injected"></span> Injection payload <code>{{ attack_target }}</code></button>
+          </div>
+
+          <div class="rule"></div>
+          <div class="section-label"><span class="section-number">02</span> SERVER RESPONSE {% if timestamp %}<span class="response-time">Executed at {{ timestamp }}</span>{% endif %}</div>
+          {% if response %}
+          <div class="assembled-command"><span class="command-label">SHELL COMMAND ASSEMBLED</span><code>{{ response.command }}</code></div>
+          <div class="terminal">
+            <div class="terminal-top"><div class="lights"><i></i><i></i><i></i></div><span>stdout / stderr</span><span class="exit-status">exit code: {{ response.return_code if response.return_code is not none else 'timeout/error' }}</span></div>
+            <pre id="command-output">{{ response.output }}</pre>
+          </div>
+          {% else %}
+          <div class="terminal placeholder-terminal">
+            <div class="terminal-top"><div class="lights"><i></i><i></i><i></i></div><span>stdout / stderr</span><span class="exit-status">Awaiting execution</span></div>
+            <pre><span class="dim">netprobe@localhost:~$</span> <span class="cursor">▊</span>
+
+<span class="dim">Run a command to see the server response here.</span></pre>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="footer-grid">
+        <article class="note-card"><div class="card-icon red">!</div><div><h3>Root cause</h3><p>User-controlled text is appended to a system command and passed to <code>subprocess.run(..., shell=True)</code>. A shell separator can start a second command.</p></div></article>
+        <article class="note-card"><div class="card-icon blue">↗</div><div><h3>Why “in-band”?</h3><p>The server captures standard output and displays it on this same web page. The attacker immediately sees the injected command's result.</p></div></article>
+      </div>
+    </main>
+    <footer>CYBER SECURITY · IT-30001 · IIIT ALLAHABAD <span>EDUCATIONAL LAB · DO NOT DEPLOY</span></footer>
+  </div>
+</body>
+</html>

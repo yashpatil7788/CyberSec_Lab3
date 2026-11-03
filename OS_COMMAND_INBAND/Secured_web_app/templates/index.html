@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>NetProbe Lab | In-band Injection — IPv4 Allow-List Mitigation</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <div class="container">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NetProbe Lab home">
+        <span class="brand-mark">›_</span>
+        <span>NetProbe<span class="accent">Lab</span></span>
+      </a>
+      <div class="header-right">
+        <span class="local-chip"><span class="status-dot"></span> LOCALHOST ONLY</span>
+        <span class="variant-chip">VARIANT 01 · IN-BAND</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <p class="eyebrow"><span class="eyebrow-line"></span> WEB SERVER SECURITY LAB / IT-30001</p>
+        <h1>OS Command <span>Injection.</span></h1>
+        <p class="lead">A network diagnostic lab demonstrating one implemented mitigation: strict IPv4 allow-list validation before command execution.</p>
+        <div class="warning" role="note"><span class="warning-icon">!</span><div><strong>Mitigation demonstration only.</strong> The original shell execution remains unchanged to isolate the effect of strict IPv4 validation. Run locally; do not deploy this educational version.</div></div>
+      </section>
+
+      <section class="workbench" aria-label="Command injection workbench">
+        <div class="workspace-header">
+          <div class="workspace-title"><span class="terminal-icon">&gt;_</span><div><h2>Network Diagnostic Console</h2><p>Lab environment: {{ os_label }}</p></div></div>
+          <span class="mode-tag"><span class="small-dot"></span> ALLOW-LIST MODE</span>
+        </div>
+        <div class="workspace-body">
+          <div class="section-label"><span class="section-number">01</span> INPUT</div>
+          <form id="diagnose-form" action="{{ url_for('diagnose') }}" method="post">
+            <label for="target">Target IPv4 address</label>
+            <div class="input-row"><span class="input-prefix">$</span><input id="target" name="target" value="{{ target }}" type="text" spellcheck="false" autocapitalize="off" autocomplete="off" required maxlength="200" aria-describedby="input-help"><button type="submit" class="run-btn">Run diagnostic <span aria-hidden="true">↗</span></button></div>
+            <p id="input-help" class="hint">Only valid IPv4 addresses reach the ping command. The same injection payload is rejected before execution.</p>
+          </form>
+
+          <div class="examples">
+            <span class="examples-label">TRY AN EXAMPLE</span>
+            <button class="example-btn" type="button" data-target="{{ normal_target }}"><span class="example-indicator normal"></span> Normal request <code>{{ normal_target }}</code></button>
+            <button class="example-btn attack" type="button" data-target="{{ attack_target }}"><span class="example-indicator injected"></span> Blocked injection test <code>{{ attack_target }}</code></button>
+          </div>
+
+          <div class="rule"></div>
+          <div class="section-label"><span class="section-number">02</span> SERVER RESPONSE {% if timestamp %}<span class="response-time">Checked at {{ timestamp }}</span>{% endif %}</div>
+          {% if response %}
+          <div class="assembled-command"><span class="command-label">{{ 'VALIDATION RESULT — COMMAND NOT RUN' if response.blocked else 'SHELL COMMAND ASSEMBLED (VALIDATED IPV4)' }}</span><code>{{ response.command }}</code></div>
+          <div class="terminal">
+            <div class="terminal-top"><div class="lights"><i></i><i></i><i></i></div><span>{{ 'Input validation' if response.blocked else 'stdout / stderr' }}</span><span class="exit-status">{{ 'not executed' if response.blocked else 'exit code: ' ~ (response.return_code if response.return_code is not none else 'timeout/error') }}</span></div>
+            <pre id="command-output">{{ response.output }}</pre>
+          </div>
+          {% else %}
+          <div class="terminal placeholder-terminal">
+            <div class="terminal-top"><div class="lights"><i></i><i></i><i></i></div><span>stdout / stderr</span><span class="exit-status">Awaiting execution</span></div>
+            <pre><span class="dim">netprobe@localhost:~$</span> <span class="cursor">▊</span>
+
+<span class="dim">Run a command to see the server response here.</span></pre>
+          </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <div class="footer-grid">
+        <article class="note-card"><div class="card-icon blue">✓</div><div><h3>Implemented mitigation (one fix)</h3><p>Python <code>ipaddress.IPv4Address()</code> rejects commands, separators and invalid address strings before the shell call. The original <code>shell=True</code> remains unchanged for comparison.</p></div></article>
+        <article class="note-card"><div class="card-icon blue">↗</div><div><h3>Before and after</h3><p>The original in-band demo returned the result of injected <code>whoami</code>. This version rejects the identical input with HTTP 400 and runs no command.</p></div></article>
+      </div>
+    </main>
+    <footer>CYBER SECURITY · IT-30001 · IIIT ALLAHABAD <span>ONE MITIGATION · LOCAL LAB ONLY</span></footer>
+  </div>
+</body>
+</html>
